@@ -1,0 +1,11 @@
+Revision history for Perl extension CGI::Application::Plugin::DBH
+
+1.00 Wed Sep  8 19:15:44 EST 2004
+    - Bumped version for release to CPAN
+
+0.02 Sun Sep  5 12:05:50 EST 2004
+    - Added support for initializing with an existing database handle.
+
+0.01  Sat Sep  4 21:54:31 EST 2004
+	- initial release
+

@@ -1,0 +1,17 @@
+--- #YAML:1.0
+name: CGI-Application-Plugin-DBH
+version: 1.00
+license: perl
+distribution_type: module
+requires:
+  CGI::Application: 0
+  DBD::Mock: 0.11
+  DBI: 0
+recommends: {}
+build_requires: {}
+conflicts: {}
+provides:
+  CGI::Application::Plugin::DBH:
+    file: lib/CGI/Application/Plugin/DBH.pm
+    version: 1.00
+generated_by: Module::Build version 0.21

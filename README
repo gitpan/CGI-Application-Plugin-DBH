@@ -1,0 +1,84 @@
+NAME
+    CGI::Application::Plugin::DBH - Easy DBI access from CGI::Application
+
+SYNOPSIS
+     use CGI::Application::Plugin::DBH (qw/dbh_config dbh/);
+
+     sub cgiapp_init  {
+        my $self = shift;
+
+        # use the same args as DBI->connect();
+        $self->dbh_config($data_source, $username, $auth, \%attr);
+     }
+
+     sub my_run_mode {
+        my $self = shift;
+
+        my $date = $self->dbh->selectrow_array("SELECT CURRENT_DATE");
+
+        # OR ...
+
+        my $dbh = $self->dbh;
+        my $date = $dbh->selectrow_array("SELECT CURRENT_DATE");
+
+     } 
+
+DESCRIPTION
+    CGI::Application::Plugin::DBH adds easy access to a DBI database handle
+    to your CGI::Application modules. Lazy loading is used to prevent a
+    database connection from being made if the "dbh" method is not called
+    during the request. In other words, the database connection is not
+    created until it is actually needed.
+
+METHODS
+  dbh()
+     my $date = $self->dbh->selectrow_array("SELECT CURRENT_DATE");
+
+     # OR ...
+
+     my $dbh = $self->dbh;
+     my $date = $dbh->selectrow_array("SELECT CURRENT_DATE");
+
+    This method will return the current DBI database handle. The database
+    handle is created on the first call to this method, and any subsequent
+    calls will return the same handle.
+
+  dbh_config()
+     sub cgiapp_init  {
+        my $self = shift;
+
+        # use the same args as DBI->connect();
+        $self->dbh_config($data_source, $username, $auth, \%attr);
+
+        # ...or use some existing handle you have
+        $self->dbh_config($DBH);
+
+     }
+
+    Used to provide your DBI connection parameters. You can either pass in
+    an existing DBI database handle, or provide the usual parameters used
+    for DBI->connect().
+
+    The recommended place to call "dbh_config" is in the "cgiapp_init" stage
+    of CGI::Application. If this method is called after the database handle
+    has already been accessed, then it will die with an error message.
+
+LIMITATIONS
+    To keep things simple only one database handle is supported. Nothing
+    prevents you from creating a second handle on your own.
+
+SEE ALSO
+    Ima::DBI is similar, but has much more complexity and features,
+    including support for multiple database handles.
+
+    CGI::Application, DBI, CGI::Application::Plugin::ValidateRM, perl(1)
+
+AUTHOR
+    Mark Stosberg <mark@summersault.com>
+
+LICENSE
+    Copyright (C) 2004 Mark Stosberg <mark@summersault.com>
+
+    This library is free software. You can modify and or distribute it under
+    the same terms as Perl itself.
+

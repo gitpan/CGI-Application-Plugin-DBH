@@ -1,0 +1,12 @@
+Build.PL
+Changes
+lib/CGI/Application/Plugin/DBH.pm
+Makefile.PL
+MANIFEST
+META.yml
+README
+t/basic.t
+t/existing_dbh.t
+t/pod.t
+t/TestAppBasic.pm
+t/TestAppExistingDBH.pm
