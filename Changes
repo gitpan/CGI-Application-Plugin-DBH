@@ -1,5 +1,9 @@
 Revision history for Perl extension CGI::Application::Plugin::DBH
 
+2.00 Wed Oct  6 21:21:55 EST 2004
+	- Added support for multiple handles and named handles. The API is
+	  completely backwards compatible with the existing behavior.  (Tony Fraser)
+
 1.00 Wed Sep  8 19:15:44 EST 2004
     - Bumped version for release to CPAN
 

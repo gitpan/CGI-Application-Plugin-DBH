@@ -9,18 +9,27 @@ SYNOPSIS
 
         # use the same args as DBI->connect();
         $self->dbh_config($data_source, $username, $auth, \%attr);
+
+        # or to use more than one dbh
+        $self->dbh_config('my_handle', 
+                        [ $data_source, $user, $auth, \%attr ]);
+        $self->dbh_config('my_other_handle', 
+                        [ $data_source, $user, $auth, \%attr ]);
      }
 
      sub my_run_mode {
         my $self = shift;
 
         my $date = $self->dbh->selectrow_array("SELECT CURRENT_DATE");
+        # again with a named handle
+        $date = $self->dbh('my_handle')->selectrow_array("SELECT CURRENT_DATE");
 
         # OR ...
 
         my $dbh = $self->dbh;
+        # again with a named handle
+        $dbh = $self->dbh('my_other_handle');
         my $date = $dbh->selectrow_array("SELECT CURRENT_DATE");
-
      } 
 
 DESCRIPTION
@@ -33,10 +42,14 @@ DESCRIPTION
 METHODS
   dbh()
      my $date = $self->dbh->selectrow_array("SELECT CURRENT_DATE");
+     # again with a named handle
+     $date = $self->dbh('my_handle')->selectrow_array("SELECT CURRENT_DATE");
 
      # OR ...
 
      my $dbh = $self->dbh;
+     # again with a named handle
+     $dbh = $self->dbh('my_other_handle');
      my $date = $dbh->selectrow_array("SELECT CURRENT_DATE");
 
     This method will return the current DBI database handle. The database
@@ -50,9 +63,15 @@ METHODS
         # use the same args as DBI->connect();
         $self->dbh_config($data_source, $username, $auth, \%attr);
 
+        # or to use more than one dbh
+        $self->dbh_config('my_handle', 
+                        [ $data_source, $user, $auth, \%attr ]);
+        $self->dbh_config('my_other_handle', 
+                        [ $data_source, $user, $auth, \%attr ]);
+
         # ...or use some existing handle you have
         $self->dbh_config($DBH);
-
+        $self->dbh_config('my_handle', $DBH);   # this works too
      }
 
     Used to provide your DBI connection parameters. You can either pass in
@@ -63,18 +82,36 @@ METHODS
     of CGI::Application. If this method is called after the database handle
     has already been accessed, then it will die with an error message.
 
-LIMITATIONS
-    To keep things simple only one database handle is supported. Nothing
-    prevents you from creating a second handle on your own.
+  dbh_default_name()
+     sub my_runmode {
+        my $self = shift;
+
+        my $old_handle_name = $self->dbh_default_name('my_handle');
+        $self->some_legacy_code();  # some_legacy_code() will get "my_handle"
+                                    # when it calls $self->dbh() without parameters
+
+        $self->dbh_default_name($old_handle_name);    # Return to normal.
+     }
+
+    Can be used to alter the name of the handle that is returned by dbh()
+    when called with no parameters. It can even be used to alter the name
+    used for the unamed handle if called before dbh_config().
+
+    Using this method is completely optional. If you don't have a use for it
+    don't use it. Internally the handle name "__cgi_application_plugin_dbh"
+    is used to keep track of the unnamed handle unless it is changed by
+    dbh_default_name() before a call to dbh_config() without a name
+    parameter.
 
 SEE ALSO
-    Ima::DBI is similar, but has much more complexity and features,
-    including support for multiple database handles.
+    Ima::DBI is similar, but has much more complexity and features.
 
     CGI::Application, DBI, CGI::Application::Plugin::ValidateRM, perl(1)
 
 AUTHOR
     Mark Stosberg <mark@summersault.com>
+
+    Multi Handle Support added by: Tony Fraser <tony@sybaspace.com>
 
 LICENSE
     Copyright (C) 2004 Mark Stosberg <mark@summersault.com>
