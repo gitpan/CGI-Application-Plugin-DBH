@@ -12,3 +12,5 @@ t/pod.t
 t/TestAppBasic.pm
 t/TestAppExistingDBH.pm
 t/TestAppMultiHandle.pm
+t/TestAppAutoConfig.pm
+t/auto_config.t

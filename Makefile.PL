@@ -2,14 +2,14 @@
 use ExtUtils::MakeMaker;
 WriteMakefile
 (
-          'PL_FILES' => {},
-          'INSTALLDIRS' => 'site',
           'NAME' => 'CGI::Application::Plugin::DBH',
           'VERSION_FROM' => 'lib/CGI/Application/Plugin/DBH.pm',
           'PREREQ_PM' => {
-                           'CGI::Application' => 0,
+                           'CGI::Application' => '0',
                            'DBD::Mock' => '0.11',
-                           'DBI' => 0
-                         }
+                           'DBI' => '0'
+                         },
+          'INSTALLDIRS' => 'site',
+          'PL_FILES' => {}
         )
 ;

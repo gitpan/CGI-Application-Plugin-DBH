@@ -15,7 +15,7 @@ require Exporter;
     dbh_default_name
 );
 
-$VERSION = '2.00';
+$VERSION = '3.00';
 
 sub dbh {
     my $self = shift;
@@ -24,8 +24,11 @@ sub dbh {
     $self->{__DBH_DEFAULT_NAME} ||= "__cgi_application_plugin_dbh";     # First use case.
     $name ||= $self->{__DBH_DEFAULT_NAME};                              # Unamed handle case.
 
-    croak "must call dbh_config() before calling dbh()." unless $self->{__DBH_CONFIG}{$name};
-
+	unless ($self->{__DBH_CONFIG}{$name}){
+		__auto_config($self, $name);
+		croak "must call dbh_config() before calling dbh()." unless $self->{__DBH_CONFIG}{$name};
+	}
+	
     unless( defined($self->{__DBH}{$name}) && $self->{__DBH}{$name}->ping ) {
         # create DBH object
         if( $self->{__DBH_CONFIG}{$name} ) {
@@ -64,6 +67,46 @@ sub dbh_config {
         $self->{__DBH_CONFIG}{$name} = \@_;
     }
 
+}
+
+sub __auto_config {
+	# get parameters for dbh_config from CGI::App instance parameters
+	 my $app = shift;
+	 my $name = shift;
+	 
+	 
+	 my $params = $app->param('::Plugin::DBH::dbh_config');
+	 return __auto_config_env($app, $name) unless $params;
+	
+	 # if array reference: only one handle configured, pass array contents to dbh_config
+	 if (UNIVERSAL::isa($params, 'ARRAY')){
+	    # verify that we really want the default handle
+	    return unless $name eq dbh_default_name($app);
+	 	dbh_config($app, @$params);
+	 	return;
+	 }
+	 
+	 # if hash reference: many handles configured, named with the hash keys
+	 if (UNIVERSAL::isa($params, 'HASH')){
+	 	$params = $params->{$name};
+	 	return __auto_config_env($app, $name) unless $params;
+	 	dbh_config($app, $name, $params);
+	 	return;
+	 }
+	
+	croak "Parameter ::Plugin::DBH::dbh_config must be an array or hash reference";
+}
+
+sub __auto_config_env{
+	# check if DBI environment variable is set
+	# this can be used to configure the default handle 
+	my $app = shift;
+	my $name = shift;
+	 
+	return unless $name eq dbh_default_name($app);
+	return unless $ENV{DBI_DSN};
+	# DBI_DSN is set, so autoconfigure with all DSN, user id, pass all undefined
+	dbh_config($app, undef, undef, undef);
 }
 
 sub dbh_default_name {
@@ -165,6 +208,57 @@ The recommended place to call C<dbh_config> is in the C<cgiapp_init>
 stage of L<CGI::Application|CGI::Application>.  If this method is called after the database handle
 has already been accessed, then it will die with an error message.
 
+=head3 Automatic configuration using CGI::App instance parameters
+
+An alternative to explicitly calling C<dbh_config> in your application
+is to rely on the presence of specific instance parameters that allow the
+plugin to configure itself.
+
+If you set the CGI::App parameter C<::Plugin::DBH::dbh_config> to
+an array reference the contents of that array will be used as parameters to 
+C<dbh_config> (if it has not been explicitly called before).
+
+The code in the synopsis can be rewritten as
+
+  use CGI::Application::Plugin::DBH (qw/dbh/);
+	# no longer a need to import dbh_config
+	
+  sub cgiapp_init  {
+     # you do not need to do anything here
+  }
+
+  sub my_run_mode {
+  
+	# this part stays unchanged
+	
+	....
+  
+  } 	
+
+and in the instance script ( or instance configuration file, if you have)
+
+   $app->param('::Plugin::DBH::dbh_config' =>
+   		[ $data_source, $username, $auth, \%attr ] );
+
+If you want to configure more than one handle, set up a hash with the handle names
+as keys:
+
+	$app->param('::Plugin::DBH::dbh_config' =>
+   		{ my_handle => [ $data_source, $username, $auth, \%attr ] ,
+   		  my_other_handle => [ $data_source, $username, $auth, \%attr ] 
+   		}  );
+   		
+
+=head3 Automatic configuration with DBI environment variables
+
+If you do not set any parameters, and do not call C<dbh_config>, this plugin
+checks to see if you set the DBI environment variable C<DBI_DSN>. If present,
+this DSN will be used for the default handle. Note that the DBI documentation
+does not encourage using this method (especially in the context of web applications),
+that you will most likely have to also set C<DBI_USER> and C<DBI_PASS>, and
+that this can only be used for the default handle.
+
+
 =head2 dbh_default_name()
 
  sub my_runmode {
@@ -199,6 +293,9 @@ Mark Stosberg <mark@summersault.com>
 Multi Handle Support added by:
 Tony Fraser <tony@sybaspace.com>
 
+Autoconfig Support added by:
+Thilo Planz <thilo@cpan.org>
+
 =head1 LICENSE
 
 Copyright (C) 2004 Mark Stosberg <mark@summersault.com>
@@ -206,4 +303,5 @@ Copyright (C) 2004 Mark Stosberg <mark@summersault.com>
 This library is free software. You can modify and or distribute it under the same terms as Perl itself.
 
 =cut
+
 

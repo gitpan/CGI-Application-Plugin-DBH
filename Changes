@@ -1,5 +1,9 @@
 Revision history for Perl extension CGI::Application::Plugin::DBH
 
+3.00 Thu Mar 17 20:07:32 EST 2005
+    - Added support for auto-configuring the handle through the instance
+      script or environment variables. (Thilo Planz).
+
 2.00 Wed Oct  6 21:21:55 EST 2004
 	- Added support for multiple handles and named handles. The API is
 	  completely backwards compatible with the existing behavior.  (Tony Fraser)

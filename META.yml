@@ -1,7 +1,8 @@
 --- #YAML:1.0
 name: CGI-Application-Plugin-DBH
-version: 2.00
-author: Mark Stosberg <mark@summersault.com>
+version: 3.00
+author:
+  - Mark Stosberg <mark@summersault.com>
 abstract: Plugin that adds DBH support to CGI::Application
 license: perl
 requires:
@@ -11,5 +12,5 @@ requires:
 provides:
   CGI::Application::Plugin::DBH:
     file: lib/CGI/Application/Plugin/DBH.pm
-    version: 2.00
-generated_by: Module::Build version 0.25
+    version: 3.00
+generated_by: Module::Build version 0.2606
