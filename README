@@ -72,6 +72,9 @@ METHODS
         # ...or use some existing handle you have
         $self->dbh_config($DBH);
         $self->dbh_config('my_handle', $DBH);   # this works too
+
+        # Use a callback to create your owh handle that is still lazy loaded
+        $self->dbh_config(sub { DBI->connect_cached(); });
      }
 
     Used to provide your DBI connection parameters. You can either pass in

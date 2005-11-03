@@ -1,5 +1,10 @@
 Revision history for Perl extension CGI::Application::Plugin::DBH
 
+4.00 Thu Nov  3 16:59:28 EST 2005
+    - Added support for configuring through a callback. This can be used to
+      create a connection on your own, and still have it be lazy loaded.
+      This was requested for use with connect_cached().
+
 3.00 Thu Mar 17 20:07:32 EST 2005
     - Added support for auto-configuring the handle through the instance
       script or environment variables. (Thilo Planz).

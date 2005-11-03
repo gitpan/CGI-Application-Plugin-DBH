@@ -15,7 +15,7 @@ require Exporter;
     dbh_default_name
 );
 
-$VERSION = '3.00';
+$VERSION = '4.00';
 
 sub dbh {
     my $self = shift;
@@ -31,10 +31,16 @@ sub dbh {
 	
     unless( defined($self->{__DBH}{$name}) && $self->{__DBH}{$name}->ping ) {
         # create DBH object
-        if( $self->{__DBH_CONFIG}{$name} ) {
-            require DBI;
+        if(my $config = $self->{__DBH_CONFIG}{$name} ) {
+            # Use a callback
+            if (ref $config eq 'CODE') {
+                $self->{__DBH}{$name} = $config->();
+            }
             # use the parameters the user supplied
-            $self->{__DBH}{$name} = DBI->connect(@{ $self->{__DBH_CONFIG}{$name} });
+            else {
+                require DBI;
+                $self->{__DBH}{$name} = DBI->connect(@{ $self->{__DBH_CONFIG}{$name} });
+            }
         } else {
         }
     }
@@ -54,8 +60,8 @@ sub dbh_config {
 
     # See if a handle is being passed in directly.
     require UNIVERSAL;
-    if( ref($_[0]) eq 'ARRAY' ) {
-	$self->{__DBH_CONFIG}{$name} = shift;
+    if( ref($_[0]) eq 'ARRAY' or ref $_[0] eq 'CODE' ) {
+        $self->{__DBH_CONFIG}{$name} = shift;
     }
     elsif( ref($_[0]) and $_[0]->isa('DBI::db') ) {
         $self->{__DBH}{$name} = shift;
@@ -199,6 +205,9 @@ the first call to this method, and any subsequent calls will return the same han
     # ...or use some existing handle you have
     $self->dbh_config($DBH);
     $self->dbh_config('my_handle', $DBH);   # this works too
+
+    # Use a callback to create your owh handle that is still lazy loaded
+    $self->dbh_config(sub { DBI->connect_cached(); });
  }
 
 Used to provide your DBI connection parameters. You can either pass in an existing 
