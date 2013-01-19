@@ -1,16 +1,26 @@
---- #YAML:1.0
-name: CGI-Application-Plugin-DBH
-version: 4.00
+---
+abstract: 'Plugin that adds DBH support to CGI::Application'
 author:
-  - Mark Stosberg <mark@summersault.com>
-abstract: Plugin that adds DBH support to CGI::Application
+  - 'Mark Stosberg <mark@summersault.com>'
+build_requires: {}
+configure_requires:
+  Module::Build: 0.4
+dynamic_config: 1
+generated_by: 'Module::Build version 0.4003, CPAN::Meta::Converter version 2.112150'
 license: perl
-requires:
-  CGI::Application: 0
-  DBD::Mock: 0.11
-  DBI: 0
+meta-spec:
+  url: http://module-build.sourceforge.net/META-spec-v1.4.html
+  version: 1.4
+name: CGI-Application-Plugin-DBH
 provides:
   CGI::Application::Plugin::DBH:
     file: lib/CGI/Application/Plugin/DBH.pm
-    version: 4.00
-generated_by: Module::Build version 0.2611
+    version: 4.01
+requires:
+  CGI::Application: 0
+  DBI: 0
+  Test::MockObject: 1.20120301
+  parent: 0
+resources:
+  license: http://dev.perl.org/licenses/
+version: 4.01

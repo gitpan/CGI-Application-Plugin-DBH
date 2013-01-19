@@ -1,21 +1,16 @@
 package CGI::Application::Plugin::DBH;
-
+use parent 'Exporter';
 
 use strict;
-use vars qw($VERSION @ISA  @EXPORT_OK);
 use Carp;
-require Exporter;
-@ISA = qw(Exporter);
-# Items to export into callers namespace by default. Note: do not export
-# names by default without a very good reason. Use EXPORT_OK instead.
-# Do not simply export all your public functions/methods/constants.
-@EXPORT_OK = qw(
+
+our @EXPORT_OK = qw(
     dbh
     dbh_config
     dbh_default_name
 );
 
-$VERSION = '4.00';
+our $VERSION = '4.01';
 
 sub dbh {
     my $self = shift;
@@ -24,11 +19,11 @@ sub dbh {
     $self->{__DBH_DEFAULT_NAME} ||= "__cgi_application_plugin_dbh";     # First use case.
     $name ||= $self->{__DBH_DEFAULT_NAME};                              # Unamed handle case.
 
-	unless ($self->{__DBH_CONFIG}{$name}){
-		__auto_config($self, $name);
-		croak "must call dbh_config() before calling dbh()." unless $self->{__DBH_CONFIG}{$name};
-	}
-	
+    unless ($self->{__DBH_CONFIG}{$name}){
+        __auto_config($self, $name);
+        croak "must call dbh_config() before calling dbh()." unless $self->{__DBH_CONFIG}{$name};
+    }
+
     unless( defined($self->{__DBH}{$name}) && $self->{__DBH}{$name}->ping ) {
         # create DBH object
         if(my $config = $self->{__DBH_CONFIG}{$name} ) {
@@ -55,7 +50,7 @@ sub dbh_config {
 
     my $name = shift if( ref($_[1]) );
     $name ||= $self->{__DBH_DEFAULT_NAME};                              # Unamed handle case.
-    
+
     croak "Calling dbh_config after the dbh has already been created" if( defined $self->{__DBH}{$name} );
 
     # See if a handle is being passed in directly.
@@ -76,43 +71,43 @@ sub dbh_config {
 }
 
 sub __auto_config {
-	# get parameters for dbh_config from CGI::App instance parameters
-	 my $app = shift;
-	 my $name = shift;
-	 
-	 
-	 my $params = $app->param('::Plugin::DBH::dbh_config');
-	 return __auto_config_env($app, $name) unless $params;
-	
-	 # if array reference: only one handle configured, pass array contents to dbh_config
-	 if (UNIVERSAL::isa($params, 'ARRAY')){
-	    # verify that we really want the default handle
-	    return unless $name eq dbh_default_name($app);
-	 	dbh_config($app, @$params);
-	 	return;
-	 }
-	 
-	 # if hash reference: many handles configured, named with the hash keys
-	 if (UNIVERSAL::isa($params, 'HASH')){
-	 	$params = $params->{$name};
-	 	return __auto_config_env($app, $name) unless $params;
-	 	dbh_config($app, $name, $params);
-	 	return;
-	 }
-	
-	croak "Parameter ::Plugin::DBH::dbh_config must be an array or hash reference";
+    # get parameters for dbh_config from CGI::App instance parameters
+     my $app = shift;
+     my $name = shift;
+
+
+     my $params = $app->param('::Plugin::DBH::dbh_config');
+     return __auto_config_env($app, $name) unless $params;
+
+     # if array reference: only one handle configured, pass array contents to dbh_config
+     if (UNIVERSAL::isa($params, 'ARRAY')){
+        # verify that we really want the default handle
+        return unless $name eq dbh_default_name($app);
+        dbh_config($app, @$params);
+        return;
+     }
+
+     # if hash reference: many handles configured, named with the hash keys
+     if (UNIVERSAL::isa($params, 'HASH')){
+        $params = $params->{$name};
+        return __auto_config_env($app, $name) unless $params;
+        dbh_config($app, $name, $params);
+        return;
+     }
+
+    croak "Parameter ::Plugin::DBH::dbh_config must be an array or hash reference";
 }
 
 sub __auto_config_env{
-	# check if DBI environment variable is set
-	# this can be used to configure the default handle 
-	my $app = shift;
-	my $name = shift;
-	 
-	return unless $name eq dbh_default_name($app);
-	return unless $ENV{DBI_DSN};
-	# DBI_DSN is set, so autoconfigure with all DSN, user id, pass all undefined
-	dbh_config($app, undef, undef, undef);
+    # check if DBI environment variable is set
+    # this can be used to configure the default handle 
+    my $app = shift;
+    my $name = shift;
+
+    return unless $name eq dbh_default_name($app);
+    return unless $ENV{DBI_DSN};
+    # DBI_DSN is set, so autoconfigure with all DSN, user id, pass all undefined
+    dbh_config($app, undef, undef, undef);
 }
 
 sub dbh_default_name {
@@ -141,9 +136,9 @@ CGI::Application::Plugin::DBH - Easy DBI access from CGI::Application
 
     # or to use more than one dbh
     $self->dbh_config('my_handle', 
-		    [ $data_source, $user, $auth, \%attr ]);
+            [ $data_source, $user, $auth, \%attr ]);
     $self->dbh_config('my_other_handle', 
-		    [ $data_source, $user, $auth, \%attr ]);
+            [ $data_source, $user, $auth, \%attr ]);
  }
 
  sub my_run_mode {
@@ -198,9 +193,9 @@ the first call to this method, and any subsequent calls will return the same han
 
     # or to use more than one dbh
     $self->dbh_config('my_handle', 
-		    [ $data_source, $user, $auth, \%attr ]);
+            [ $data_source, $user, $auth, \%attr ]);
     $self->dbh_config('my_other_handle', 
-		    [ $data_source, $user, $auth, \%attr ]);
+            [ $data_source, $user, $auth, \%attr ]);
 
     # ...or use some existing handle you have
     $self->dbh_config($DBH);
@@ -230,33 +225,33 @@ C<dbh_config> (if it has not been explicitly called before).
 The code in the synopsis can be rewritten as
 
   use CGI::Application::Plugin::DBH (qw/dbh/);
-	# no longer a need to import dbh_config
-	
+    # no longer a need to import dbh_config
+    
   sub cgiapp_init  {
      # you do not need to do anything here
   }
 
   sub my_run_mode {
   
-	# this part stays unchanged
-	
-	....
+    # this part stays unchanged
+    
+    ....
   
-  } 	
+  }     
 
 and in the instance script ( or instance configuration file, if you have)
 
    $app->param('::Plugin::DBH::dbh_config' =>
-   		[ $data_source, $username, $auth, \%attr ] );
+        [ $data_source, $username, $auth, \%attr ] );
 
 If you want to configure more than one handle, set up a hash with the handle names
 as keys:
 
-	$app->param('::Plugin::DBH::dbh_config' =>
-   		{ my_handle => [ $data_source, $username, $auth, \%attr ] ,
-   		  my_other_handle => [ $data_source, $username, $auth, \%attr ] 
-   		}  );
-   		
+    $app->param('::Plugin::DBH::dbh_config' =>
+        { my_handle => [ $data_source, $username, $auth, \%attr ] ,
+          my_other_handle => [ $data_source, $username, $auth, \%attr ] 
+        }  );
+        
 
 =head3 Automatic configuration with DBI environment variables
 
@@ -291,7 +286,7 @@ before a call to dbh_config() without a name parameter.
 
 =head1 SEE ALSO
 
-L<Ima::DBI|Ima::DBI> is similar, but has much more complexity and features. 
+L<Ima::DBI|Ima::DBI> is similar, but has much more complexity and features.
 
 L<CGI::Application|CGI::Application>, L<DBI|DBI>, L<CGI::Application::Plugin::ValidateRM|CGI::Application::Plugin::ValidateRM>, perl(1)
 
@@ -307,7 +302,7 @@ Thilo Planz <thilo@cpan.org>
 
 =head1 LICENSE
 
-Copyright (C) 2004 Mark Stosberg <mark@summersault.com>
+Copyright (C) 2004- Mark Stosberg <mark@summersault.com>
 
 This library is free software. You can modify and or distribute it under the same terms as Perl itself.
 

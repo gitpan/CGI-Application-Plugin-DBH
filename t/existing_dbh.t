@@ -1,15 +1,22 @@
-use Test::More qw/no_plan/;
-BEGIN { use_ok('CGI::Application::Plugin::DBH') };
-
-use lib './t';
+use Test::More;
+use Test::MockObject;
 use strict;
+use warnings;
 
-$ENV{CGI_APP_RETURN_ONLY} = 1;
+# Create our app instance that uses the plugin
+my $app = TestAppExistingDBH->new();
 
-use TestAppExistingDBH;
-my $t1_obj = TestAppExistingDBH->new();
-my $t1_output = $t1_obj->run();
+# Mock a DBI object.
+my $mock_dbh = Test::MockObject->new;
+   $mock_dbh->set_isa('DBI::db');
+   $mock_dbh->set_true('ping');
 
-use UNIVERSAL;
-ok($t1_obj->dbh->isa('DBI::db'), 'dbh() method returns DBI handle when using existing handle');
+# Test using the existing handle.
+$app->dbh_config($mock_dbh);
+isa_ok($app->dbh,'DBI::db','dbh() method returns DBI handle when using existing handle');
 
+done_testing();
+
+package TestAppExistingDBH;
+use parent 'CGI::Application';
+use CGI::Application::Plugin::DBH qw(dbh_config dbh);

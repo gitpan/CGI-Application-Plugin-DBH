@@ -1,0 +1,44 @@
+{
+   "abstract" : "Plugin that adds DBH support to CGI::Application",
+   "author" : [
+      "Mark Stosberg <mark@summersault.com>"
+   ],
+   "dynamic_config" : 1,
+   "generated_by" : "Module::Build version 0.4003, CPAN::Meta::Converter version 2.112150",
+   "license" : [
+      "perl_5"
+   ],
+   "meta-spec" : {
+      "url" : "http://search.cpan.org/perldoc?CPAN::Meta::Spec",
+      "version" : "2"
+   },
+   "name" : "CGI-Application-Plugin-DBH",
+   "prereqs" : {
+      "configure" : {
+         "requires" : {
+            "Module::Build" : "0.4"
+         }
+      },
+      "runtime" : {
+         "requires" : {
+            "CGI::Application" : 0,
+            "DBI" : 0,
+            "Test::MockObject" : "1.20120301",
+            "parent" : 0
+         }
+      }
+   },
+   "provides" : {
+      "CGI::Application::Plugin::DBH" : {
+         "file" : "lib/CGI/Application/Plugin/DBH.pm",
+         "version" : "4.01"
+      }
+   },
+   "release_status" : "stable",
+   "resources" : {
+      "license" : [
+         "http://dev.perl.org/licenses/"
+      ]
+   },
+   "version" : "4.01"
+}
