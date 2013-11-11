@@ -118,11 +118,18 @@ sub dbh_default_name {
 }
 
 1;
+
 __END__
+
+=pod
 
 =head1 NAME
 
-CGI::Application::Plugin::DBH - Easy DBI access from CGI::Application
+CGI::Application::Plugin::DBH
+
+=head1 VERSION
+
+version 4.02
 
 =head1 SYNOPSIS
 
@@ -156,7 +163,6 @@ CGI::Application::Plugin::DBH - Easy DBI access from CGI::Application
     my $date = $dbh->selectrow_array("SELECT CURRENT_DATE");
  } 
 
-
 =head1 DESCRIPTION
 
 CGI::Application::Plugin::DBH adds easy access to a L<DBI|DBI> database handle to
@@ -164,6 +170,10 @@ your L<CGI::Application|CGI::Application> modules.  Lazy loading is used to prev
 connection from being made if the C<dbh> method is not called during the
 request.  In other words, the database connection is not created until it is
 actually needed. 
+
+=head1 NAME
+
+CGI::Application::Plugin::DBH - Easy DBI access from CGI::Application
 
 =head1 METHODS
 
@@ -251,7 +261,6 @@ as keys:
         { my_handle => [ $data_source, $username, $auth, \%attr ] ,
           my_other_handle => [ $data_source, $username, $auth, \%attr ] 
         }  );
-        
 
 =head3 Automatic configuration with DBI environment variables
 
@@ -261,7 +270,6 @@ this DSN will be used for the default handle. Note that the DBI documentation
 does not encourage using this method (especially in the context of web applications),
 that you will most likely have to also set C<DBI_USER> and C<DBI_PASS>, and
 that this can only be used for the default handle.
-
 
 =head2 dbh_default_name()
 
@@ -306,6 +314,15 @@ Copyright (C) 2004- Mark Stosberg <mark@summersault.com>
 
 This library is free software. You can modify and or distribute it under the same terms as Perl itself.
 
+=head1 AUTHOR
+
+Mark Stosberg <mark@stosberg.com>
+
+=head1 COPYRIGHT AND LICENSE
+
+This software is copyright (c) 2013 by Mark Stosberg.
+
+This is free software; you can redistribute it and/or modify it under
+the same terms as the Perl 5 programming language system itself.
+
 =cut
-
-

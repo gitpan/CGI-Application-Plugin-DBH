@@ -1,10 +1,10 @@
 {
-   "abstract" : "Plugin that adds DBH support to CGI::Application",
+   "abstract" : "Easy DBI access from CGI::Application",
    "author" : [
-      "Mark Stosberg <mark@summersault.com>"
+      "Mark Stosberg <mark@stosberg.com>"
    ],
-   "dynamic_config" : 1,
-   "generated_by" : "Module::Build version 0.4003, CPAN::Meta::Converter version 2.112150",
+   "dynamic_config" : 0,
+   "generated_by" : "Dist::Zilla version 4.300039, CPAN::Meta::Converter version 2.132830",
    "license" : [
       "perl_5"
    ],
@@ -16,29 +16,38 @@
    "prereqs" : {
       "configure" : {
          "requires" : {
-            "Module::Build" : "0.4"
+            "ExtUtils::MakeMaker" : "6.30"
+         }
+      },
+      "develop" : {
+         "requires" : {
+            "Test::Pod" : "1.41"
          }
       },
       "runtime" : {
          "requires" : {
-            "CGI::Application" : 0,
-            "DBI" : 0,
-            "Test::MockObject" : "1.20120301",
-            "parent" : 0
+            "CGI::Application" : "0",
+            "DBI" : "0",
+            "parent" : "0"
          }
-      }
-   },
-   "provides" : {
-      "CGI::Application::Plugin::DBH" : {
-         "file" : "lib/CGI/Application/Plugin/DBH.pm",
-         "version" : "4.01"
+      },
+      "test" : {
+         "requires" : {
+            "DBD::Mock" : "0.11",
+            "Test::MockObject" : "1.20120301",
+            "Test::More" : "1.001002"
+         }
       }
    },
    "release_status" : "stable",
    "resources" : {
-      "license" : [
-         "http://dev.perl.org/licenses/"
-      ]
+      "homepage" : "https://github.com/frioux/CGI-Application-Plugin-DBH",
+      "repository" : {
+         "type" : "git",
+         "url" : "https://github.com/frioux/CGI-Application-Plugin-DBH.git",
+         "web" : "https://github.com/frioux/CGI-Application-Plugin-DBH"
+      }
    },
-   "version" : "4.01"
+   "version" : "4.02"
 }
+

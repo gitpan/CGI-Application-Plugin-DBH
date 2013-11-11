@@ -1,26 +1,25 @@
 ---
-abstract: 'Plugin that adds DBH support to CGI::Application'
+abstract: 'Easy DBI access from CGI::Application'
 author:
-  - 'Mark Stosberg <mark@summersault.com>'
-build_requires: {}
+  - 'Mark Stosberg <mark@stosberg.com>'
+build_requires:
+  DBD::Mock: 0.11
+  Test::MockObject: 1.20120301
+  Test::More: 1.001002
 configure_requires:
-  Module::Build: 0.4
-dynamic_config: 1
-generated_by: 'Module::Build version 0.4003, CPAN::Meta::Converter version 2.112150'
+  ExtUtils::MakeMaker: 6.30
+dynamic_config: 0
+generated_by: 'Dist::Zilla version 4.300039, CPAN::Meta::Converter version 2.132830'
 license: perl
 meta-spec:
   url: http://module-build.sourceforge.net/META-spec-v1.4.html
   version: 1.4
 name: CGI-Application-Plugin-DBH
-provides:
-  CGI::Application::Plugin::DBH:
-    file: lib/CGI/Application/Plugin/DBH.pm
-    version: 4.01
 requires:
   CGI::Application: 0
   DBI: 0
-  Test::MockObject: 1.20120301
   parent: 0
 resources:
-  license: http://dev.perl.org/licenses/
-version: 4.01
+  homepage: https://github.com/frioux/CGI-Application-Plugin-DBH
+  repository: https://github.com/frioux/CGI-Application-Plugin-DBH.git
+version: 4.02
