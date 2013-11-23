@@ -2,7 +2,7 @@ NAME
     CGI::Application::Plugin::DBH
 
 VERSION
-    version 4.02
+    version 4.03
 
 SYNOPSIS
      use CGI::Application::Plugin::DBH (qw/dbh_config dbh/);
@@ -153,7 +153,7 @@ METHODS
 
     Can be used to alter the name of the handle that is returned by dbh()
     when called with no parameters. It can even be used to alter the name
-    used for the unamed handle if called before dbh_config().
+    used for the unnamed handle if called before dbh_config().
 
     Using this method is completely optional. If you don't have a use for it
     don't use it. Internally the handle name "__cgi_application_plugin_dbh"

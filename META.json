@@ -4,7 +4,7 @@
       "Mark Stosberg <mark@stosberg.com>"
    ],
    "dynamic_config" : 0,
-   "generated_by" : "Dist::Zilla version 4.300039, CPAN::Meta::Converter version 2.132830",
+   "generated_by" : "Dist::Zilla version 5.006, CPAN::Meta::Converter version 2.132830",
    "license" : [
       "perl_5"
    ],
@@ -48,6 +48,6 @@
          "web" : "https://github.com/frioux/CGI-Application-Plugin-DBH"
       }
    },
-   "version" : "4.02"
+   "version" : "4.03"
 }
 

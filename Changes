@@ -1,5 +1,10 @@
 Revision history for Perl extension CGI::Application::Plugin::DBH
 
+4.03      2013-11-23 10:28:14 America/Chicago
+
+   - Fix warning RT#73776 (Arthur Axel 'fREW' Schmidt)
+   - Fix some typos (David Steinbrunner)
+
 4.02      2013-11-11 13:24:41 America/Chicago
 
    - Fix missing dep on DBD::Mock (Arthur Axel 'fREW' Schmidt)

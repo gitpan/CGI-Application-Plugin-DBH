@@ -17,7 +17,7 @@ sub dbh {
     my $name = shift;
 
     $self->{__DBH_DEFAULT_NAME} ||= "__cgi_application_plugin_dbh";     # First use case.
-    $name ||= $self->{__DBH_DEFAULT_NAME};                              # Unamed handle case.
+    $name ||= $self->{__DBH_DEFAULT_NAME};                              # Unnamed handle case.
 
     unless ($self->{__DBH_CONFIG}{$name}){
         __auto_config($self, $name);
@@ -28,7 +28,7 @@ sub dbh {
         # create DBH object
         if(my $config = $self->{__DBH_CONFIG}{$name} ) {
             # Use a callback
-            if (ref $config eq 'CODE') {
+            if (ref $config && ref $config eq 'CODE') {
                 $self->{__DBH}{$name} = $config->();
             }
             # use the parameters the user supplied
@@ -49,7 +49,7 @@ sub dbh_config {
     $self->{__DBH_DEFAULT_NAME} ||= "__cgi_application_plugin_dbh";     # First use case.
 
     my $name = shift if( ref($_[1]) );
-    $name ||= $self->{__DBH_DEFAULT_NAME};                              # Unamed handle case.
+    $name ||= $self->{__DBH_DEFAULT_NAME};                              # Unnamed handle case.
 
     croak "Calling dbh_config after the dbh has already been created" if( defined $self->{__DBH}{$name} );
 
@@ -123,13 +123,15 @@ __END__
 
 =pod
 
+=encoding UTF-8
+
 =head1 NAME
 
 CGI::Application::Plugin::DBH
 
 =head1 VERSION
 
-version 4.02
+version 4.03
 
 =head1 SYNOPSIS
 
@@ -285,7 +287,7 @@ that this can only be used for the default handle.
 
 Can be used to alter the name of the handle that is returned by dbh() when
 called with no parameters. It can even be used to alter the name used for the
-unamed handle if called before dbh_config().
+unnamed handle if called before dbh_config().
 
 Using this method is completely optional. If you don't have a use for it don't
 use it. Internally the handle name "__cgi_application_plugin_dbh" is used to
