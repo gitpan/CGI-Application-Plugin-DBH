@@ -1,8 +1,8 @@
 NAME
-    CGI::Application::Plugin::DBH
+    CGI::Application::Plugin::DBH - Easy DBI access from CGI::Application
 
 VERSION
-    version 4.03
+    version 4.04
 
 SYNOPSIS
      use CGI::Application::Plugin::DBH (qw/dbh_config dbh/);
@@ -14,9 +14,9 @@ SYNOPSIS
         $self->dbh_config($data_source, $username, $auth, \%attr);
 
         # or to use more than one dbh
-        $self->dbh_config('my_handle', 
+        $self->dbh_config('my_handle',
                 [ $data_source, $user, $auth, \%attr ]);
-        $self->dbh_config('my_other_handle', 
+        $self->dbh_config('my_other_handle',
                 [ $data_source, $user, $auth, \%attr ]);
      }
 
@@ -41,9 +41,6 @@ DESCRIPTION
     database connection from being made if the "dbh" method is not called
     during the request. In other words, the database connection is not
     created until it is actually needed.
-
-NAME
-    CGI::Application::Plugin::DBH - Easy DBI access from CGI::Application
 
 METHODS
   dbh()
@@ -70,9 +67,9 @@ METHODS
         $self->dbh_config($data_source, $username, $auth, \%attr);
 
         # or to use more than one dbh
-        $self->dbh_config('my_handle', 
+        $self->dbh_config('my_handle',
                 [ $data_source, $user, $auth, \%attr ]);
-        $self->dbh_config('my_other_handle', 
+        $self->dbh_config('my_other_handle',
                 [ $data_source, $user, $auth, \%attr ]);
 
         # ...or use some existing handle you have
@@ -104,17 +101,17 @@ METHODS
 
       use CGI::Application::Plugin::DBH (qw/dbh/);
         # no longer a need to import dbh_config
-    
+
       sub cgiapp_init  {
          # you do not need to do anything here
       }
 
       sub my_run_mode {
-  
+
         # this part stays unchanged
-    
+
         ....
-  
+
       }
 
     and in the instance script ( or instance configuration file, if you
@@ -128,7 +125,7 @@ METHODS
 
         $app->param('::Plugin::DBH::dbh_config' =>
             { my_handle => [ $data_source, $username, $auth, \%attr ] ,
-              my_other_handle => [ $data_source, $username, $auth, \%attr ] 
+              my_other_handle => [ $data_source, $username, $auth, \%attr ]
             }  );
 
    Automatic configuration with DBI environment variables
@@ -164,20 +161,7 @@ METHODS
 SEE ALSO
     Ima::DBI is similar, but has much more complexity and features.
 
-    CGI::Application, DBI, CGI::Application::Plugin::ValidateRM, perl(1)
-
-AUTHOR
-    Mark Stosberg <mark@summersault.com>
-
-    Multi Handle Support added by: Tony Fraser <tony@sybaspace.com>
-
-    Autoconfig Support added by: Thilo Planz <thilo@cpan.org>
-
-LICENSE
-    Copyright (C) 2004- Mark Stosberg <mark@summersault.com>
-
-    This library is free software. You can modify and or distribute it under
-    the same terms as Perl itself.
+    CGI::Application, DBI, CGI::Application::Plugin::ValidateRM
 
 AUTHOR
     Mark Stosberg <mark@stosberg.com>

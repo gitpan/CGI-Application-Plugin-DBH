@@ -22,4 +22,4 @@ requires:
 resources:
   homepage: https://github.com/frioux/CGI-Application-Plugin-DBH
   repository: https://github.com/frioux/CGI-Application-Plugin-DBH.git
-version: 4.03
+version: 4.04

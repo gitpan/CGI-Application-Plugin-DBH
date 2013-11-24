@@ -1,5 +1,9 @@
 Revision history for Perl extension CGI::Application::Plugin::DBH
 
+4.04      2013-11-24 17:32:50 America/Chicago
+
+   - Fix various Dist::Zilla conversion errors
+
 4.03      2013-11-23 10:28:14 America/Chicago
 
    - Fix warning RT#73776 (Arthur Axel 'fREW' Schmidt)

@@ -1,5 +1,10 @@
 package CGI::Application::Plugin::DBH;
+{
+  $CGI::Application::Plugin::DBH::VERSION = '4.04';
+}
 use parent 'Exporter';
+
+# ABSTRACT: Easy DBI access from CGI::Application
 
 use strict;
 use Carp;
@@ -9,8 +14,6 @@ our @EXPORT_OK = qw(
     dbh_config
     dbh_default_name
 );
-
-our $VERSION = '4.01';
 
 sub dbh {
     my $self = shift;
@@ -100,7 +103,7 @@ sub __auto_config {
 
 sub __auto_config_env{
     # check if DBI environment variable is set
-    # this can be used to configure the default handle 
+    # this can be used to configure the default handle
     my $app = shift;
     my $name = shift;
 
@@ -127,11 +130,11 @@ __END__
 
 =head1 NAME
 
-CGI::Application::Plugin::DBH
+CGI::Application::Plugin::DBH - Easy DBI access from CGI::Application
 
 =head1 VERSION
 
-version 4.03
+version 4.04
 
 =head1 SYNOPSIS
 
@@ -144,9 +147,9 @@ version 4.03
     $self->dbh_config($data_source, $username, $auth, \%attr);
 
     # or to use more than one dbh
-    $self->dbh_config('my_handle', 
+    $self->dbh_config('my_handle',
             [ $data_source, $user, $auth, \%attr ]);
-    $self->dbh_config('my_other_handle', 
+    $self->dbh_config('my_other_handle',
             [ $data_source, $user, $auth, \%attr ]);
  }
 
@@ -163,19 +166,15 @@ version 4.03
     # again with a named handle
     $dbh = $self->dbh('my_other_handle');
     my $date = $dbh->selectrow_array("SELECT CURRENT_DATE");
- } 
+ }
 
 =head1 DESCRIPTION
 
-CGI::Application::Plugin::DBH adds easy access to a L<DBI|DBI> database handle to
-your L<CGI::Application|CGI::Application> modules.  Lazy loading is used to prevent a database
+CGI::Application::Plugin::DBH adds easy access to a L<DBI> database handle to
+your L<CGI::Application> modules.  Lazy loading is used to prevent a database
 connection from being made if the C<dbh> method is not called during the
 request.  In other words, the database connection is not created until it is
-actually needed. 
-
-=head1 NAME
-
-CGI::Application::Plugin::DBH - Easy DBI access from CGI::Application
+actually needed.
 
 =head1 METHODS
 
@@ -192,8 +191,8 @@ CGI::Application::Plugin::DBH - Easy DBI access from CGI::Application
  $dbh = $self->dbh('my_other_handle');
  my $date = $dbh->selectrow_array("SELECT CURRENT_DATE");
 
-This method will return the current L<DBI|DBI> database handle.  The database handle is created on
-the first call to this method, and any subsequent calls will return the same handle. 
+This method will return the current L<DBI> database handle.  The database handle is created on
+the first call to this method, and any subsequent calls will return the same handle.
 
 =head2 dbh_config()
 
@@ -204,9 +203,9 @@ the first call to this method, and any subsequent calls will return the same han
     $self->dbh_config($data_source, $username, $auth, \%attr);
 
     # or to use more than one dbh
-    $self->dbh_config('my_handle', 
+    $self->dbh_config('my_handle',
             [ $data_source, $user, $auth, \%attr ]);
-    $self->dbh_config('my_other_handle', 
+    $self->dbh_config('my_other_handle',
             [ $data_source, $user, $auth, \%attr ]);
 
     # ...or use some existing handle you have
@@ -217,11 +216,11 @@ the first call to this method, and any subsequent calls will return the same han
     $self->dbh_config(sub { DBI->connect_cached(); });
  }
 
-Used to provide your DBI connection parameters. You can either pass in an existing 
+Used to provide your DBI connection parameters. You can either pass in an existing
 DBI database handle, or provide the usual parameters used for DBI->connect().
 
 The recommended place to call C<dbh_config> is in the C<cgiapp_init>
-stage of L<CGI::Application|CGI::Application>.  If this method is called after the database handle
+stage of L<CGI::Application>.  If this method is called after the database handle
 has already been accessed, then it will die with an error message.
 
 =head3 Automatic configuration using CGI::App instance parameters
@@ -231,25 +230,25 @@ is to rely on the presence of specific instance parameters that allow the
 plugin to configure itself.
 
 If you set the CGI::App parameter C<::Plugin::DBH::dbh_config> to
-an array reference the contents of that array will be used as parameters to 
+an array reference the contents of that array will be used as parameters to
 C<dbh_config> (if it has not been explicitly called before).
 
 The code in the synopsis can be rewritten as
 
   use CGI::Application::Plugin::DBH (qw/dbh/);
     # no longer a need to import dbh_config
-    
+
   sub cgiapp_init  {
      # you do not need to do anything here
   }
 
   sub my_run_mode {
-  
+
     # this part stays unchanged
-    
+
     ....
-  
-  }     
+
+  }
 
 and in the instance script ( or instance configuration file, if you have)
 
@@ -261,7 +260,7 @@ as keys:
 
     $app->param('::Plugin::DBH::dbh_config' =>
         { my_handle => [ $data_source, $username, $auth, \%attr ] ,
-          my_other_handle => [ $data_source, $username, $auth, \%attr ] 
+          my_other_handle => [ $data_source, $username, $auth, \%attr ]
         }  );
 
 =head3 Automatic configuration with DBI environment variables
@@ -296,25 +295,9 @@ before a call to dbh_config() without a name parameter.
 
 =head1 SEE ALSO
 
-L<Ima::DBI|Ima::DBI> is similar, but has much more complexity and features.
+L<Ima::DBI> is similar, but has much more complexity and features.
 
-L<CGI::Application|CGI::Application>, L<DBI|DBI>, L<CGI::Application::Plugin::ValidateRM|CGI::Application::Plugin::ValidateRM>, perl(1)
-
-=head1 AUTHOR
-
-Mark Stosberg <mark@summersault.com>
-
-Multi Handle Support added by:
-Tony Fraser <tony@sybaspace.com>
-
-Autoconfig Support added by:
-Thilo Planz <thilo@cpan.org>
-
-=head1 LICENSE
-
-Copyright (C) 2004- Mark Stosberg <mark@summersault.com>
-
-This library is free software. You can modify and or distribute it under the same terms as Perl itself.
+L<CGI::Application>, L<DBI>, L<CGI::Application::Plugin::ValidateRM>
 
 =head1 AUTHOR
 
